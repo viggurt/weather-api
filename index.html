@@ -1,0 +1,102 @@
+<!doctype html>
+<head>
+	<meta charset="utf-8">
+<title>Test</title>
+<script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="main.css">
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+</head>
+
+<body id="body">
+<div class="row">
+
+  <div class="col-md-4 col-xs-4">
+  	<ul class="list-group">
+  <li href="#" class="list-group-item" id="stockholm">Stockholm, Sweden</li>
+</ul>
+	<a id="kitty" href="http://thecatapi.com"><img src="http://thecatapi.com/api/images/get?format=src&type=gif"></a>
+
+</div>
+<div class="col-md-4 col-xs-4">
+  	<ul class="list-group">
+  <li href="#" class="list-group-item" id="oslo">Oslo, Norway</li>
+</ul>
+<h1 id="title"></h1>
+
+	<p id="time"></p>
+
+  	<p id="placeholder"></p>
+
+  	<p id="placeholder2"></p>
+  	<img id="picture" src="">
+</div>
+<div class="col-md-4 col-xs-4">
+  	<ul class="list-group">
+  <li href="#" class="list-group-item" id="helsinki">Helsinki, Finland</li>
+</ul>
+
+</div>
+</div>
+
+<div class="row">
+	
+</div>
+
+
+<script>
+  var currentTime = Date();
+
+function chosenCity(lon, lat){
+
+	//Bilder ifrån flaticon.com
+
+	$.get("http://opendata-download-metfcst.smhi.se/api/category/pmp1.5g/version/1/geopoint/lat/" + lat + "/lon/"+lon+"/data.json&callback=?", function(data, textStatus, jqXHR) {
+    $("#placeholder").text(data.timeseries[8].t + "°C");
+    $("#time").text(data.timeseries[8].validTime.replace("T", " ").replace("Z", " "));
+
+	if(data.timeseries[8].tcc >= 5){
+    	$("#picture").attr("src", "pictures/clouds.png");
+    }
+    else if(data.timeseries[8].tcc <= 4 && data.timeseries[8].tcc != 0){
+		$("#picture").attr("src", "pictures/sun-and-cloud.png");
+	}
+	else if(data.timeseries[8].tcc == 0){
+		$("#picture").attr("src", "pictures/sun.png");
+	}
+	else if(data.timeseries[8].tcc <= 4){
+		$("#picture").attr("src", "pictures/sun-and-cloudy.png");
+	}
+	else{
+		$("#placeholder2").text("The weather is weird");
+		} 
+  });
+}
+
+$("#stockholm").click(function(){
+	$("#title").text("Stockholm");
+	chosenCity("18.068", "59.329");
+});
+
+$("#oslo").click(function(){
+	$("#title").text("Oslo");
+	chosenCity("10.752", "59.913");
+
+});
+
+$("#helsinki").click(function(){
+	$("#title").text("Helsinki");
+	chosenCity("24.938", "60.169");
+});
+
+
+</script>
+</body>
+</html>
